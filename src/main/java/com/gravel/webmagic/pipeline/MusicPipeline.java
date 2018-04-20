@@ -18,14 +18,14 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 /**
  * Created by gravel on 2017/6/28.
  */
-@Component
+@Component("MusicPipeline")
 public class MusicPipeline implements Pipeline {
 
 	@Autowired
-	CommentMapper commentMapper;
+    private CommentMapper commentMapper;
 
 	@Autowired
-	MusicMapper musicMapper;
+    private MusicMapper musicMapper;
 
 	@Override
 	public void process(ResultItems resultItems, Task task) {
@@ -33,13 +33,13 @@ public class MusicPipeline implements Pipeline {
 		for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
 			if (entry.getKey().equals("music")) {
 				Music music = (Music) entry.getValue();
-				System.out.println("mMusicDao--->null" + musicMapper == null);
+//				System.out.println("mMusicDao--->null" + musicMapper == null);
 //				if (MusicMapper.countBySongId(music.getSongId()) == 0) {
                 musicMapper.insert(music);
 //				}
 			} else {
 				List<Comment> commentList = (List<Comment> ) entry.getValue();
-				System.out.println("mCommentDao--->null" + commentMapper == null);
+//				System.out.println("mCommentDao--->null" + commentMapper == null);
 //				if (mCommentDao.countByCommentId(comment.getCommentId()) == 0) {
 				for(Comment comment : commentList){
                     commentMapper.insert(comment);

@@ -51,6 +51,9 @@ public class MusicPageProcessor implements PageProcessor {
 			.addHeader("Proxy-Authorization", authHeader)
 			.setUserAgent(UserAgentUtil.getRandomUserAgent());
 
+    @Autowired
+    MusicPipeline mPipeline;
+
 	@Override
 	public Site getSite() {
 		return site;
@@ -73,11 +76,11 @@ public class MusicPageProcessor implements PageProcessor {
 			int commentCount = getComment(page, songId, 0);
 			// music 保存到数据库
 			music.setSongId(songId);
-			music.setCommentCount(-1);
+			music.setCommentCount(commentCount);
 			music.setTitle(page.getHtml().xpath("//em[@class='f-ff2']/text()").toString());
 			music.setAuthor(page.getHtml().xpath("//p[@class='des s-fc4']/span/a/text()").toString());
 			music.setAlbum(page.getHtml().xpath("//p[@class='des s-fc4']/a/text()").toString());
-			music.setURL(url);
+			music.setSongUrl(url);
 			page.putField("music", music);
 			//mMusicService.addMusic(music);
 		}
@@ -142,7 +145,7 @@ public class MusicPageProcessor implements PageProcessor {
 				.addUrl(START_URL)
 				.setDownloader(httpClientDownloader)
 				.thread(5)
-				.addPipeline(new MusicPipeline())
+				.addPipeline(mPipeline)
 				.run();
 		long end = System.currentTimeMillis();
 		System.out.println("爬虫结束,耗时--->" + MusicUtils.parseMillisecone(end - start));

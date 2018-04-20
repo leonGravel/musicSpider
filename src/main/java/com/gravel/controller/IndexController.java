@@ -12,7 +12,6 @@ import us.codecraft.webmagic.Spider;
  */
 @RestController
 public class IndexController {
-
     @Autowired
     MusicPageProcessor mProcessor;
     @Autowired

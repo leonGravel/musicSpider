@@ -6,7 +6,7 @@ import java.io.Serializable;
  *  Created by gravel on 2018/4/20.
  */
 public class Comment implements Serializable {
-	
+	private static final long serialVersionUID = -3699072211264713025L;
 	private Integer	id;
 	private String	songId;
 	private String	nickName;

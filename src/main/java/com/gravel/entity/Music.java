@@ -6,13 +6,13 @@ import java.io.Serializable;
  *  Created by gravel on 2018/4/20.
  */
 public class Music implements Serializable {
-
+	private static final long serialVersionUID = -3699072211264713025L;
 	private Integer	id;
 	private String	songId;
 	private String	title;
 	private String	author;
 	private String	album;
-	private String	URL;
+	private String	songUrl;
 	private int		commentCount;
 
 	public String getSongId() {
@@ -63,11 +63,11 @@ public class Music implements Serializable {
 		this.album = album;
 	}
 
-	public String getURL() {
-		return URL;
+	public String getSongUrl() {
+		return songUrl;
 	}
 
-	public void setURL(String URL) {
-		this.URL = URL;
+	public void setSongUrl(String songUrl) {
+		this.songUrl = songUrl;
 	}
 }

@@ -23,8 +23,10 @@ public class MusicUtils {
 		try {
 		 jsonComment = Jsoup.
 				 connect("http://music.163.com/api/v1/resource/comments/R_SO_4_" + songId + "/?limit=100&offset="+offset)
-				.header("Referer", "http://music.163.com/")
-				.header("Host", "music.163.com")
+//				.header("Referer", "http://music.163.com/")
+//				.header("Host", "music.163.com")
+                 .header("Proxy-Authorization", authHeader)
+                 .userAgent(UserAgentUtil.getRandomUserAgent())
 				.ignoreContentType(true)
 				.get().select("body").text().toString();
 		} catch (Exception e) {
