@@ -1,19 +1,12 @@
 package com.gravel.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  *  Created by gravel on 2018/4/20.
  */
-@Entity
-@Table(name = "music")
-public class Music {
+public class Music implements Serializable {
 
-	@Id
-	@GeneratedValue
 	private Integer	id;
 	private String	songId;
 	private String	title;

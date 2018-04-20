@@ -7,7 +7,6 @@ import com.gravel.entity.Comment;
 import com.gravel.entity.Music;
 import com.gravel.webmagic.downloader.MyProxyProvider;
 import com.gravel.webmagic.pipeline.MusicPipeline;
-import com.gravel.service.MusicService;
 import com.gravel.utils.MusicUtils;
 
 import com.gravel.utils.UserAgentUtil;
@@ -37,8 +36,8 @@ public class MusicPageProcessor implements PageProcessor {
 	public static final String ALBUM_URL = "http://music\\.163\\.com/playlist\\?id=\\d+";
 	// 匹配歌曲URL
 	public static final String MUSIC_URL = "http://music\\.163\\.com/song\\?id=\\d+";
-	// 初始地址, 褐言喜欢的音乐id 148174530
-	public static final String START_URL = "http://music.163.com/playlist?id=148174530";
+	// 初始地址
+	public static final String START_URL = "http://music.163.com/playlist?id=33027663";
 	public static final int ONE_PAGE = 100;
 	private int timestamp = (int) (new Date().getTime()/1000);
 	private final String authHeader = authHeader("ZF201841982132k9HuP", "1b08e7d255d6412bb8b539e8196a9d2f", timestamp);
@@ -57,8 +56,7 @@ public class MusicPageProcessor implements PageProcessor {
 		return site;
 	}
 
-	@Autowired
-	MusicService mMusicService;
+
 
 	@Override
 	public void process(Page page) {
@@ -75,13 +73,13 @@ public class MusicPageProcessor implements PageProcessor {
 			int commentCount = getComment(page, songId, 0);
 			// music 保存到数据库
 			music.setSongId(songId);
-			music.setCommentCount(commentCount);
+			music.setCommentCount(-1);
 			music.setTitle(page.getHtml().xpath("//em[@class='f-ff2']/text()").toString());
 			music.setAuthor(page.getHtml().xpath("//p[@class='des s-fc4']/span/a/text()").toString());
 			music.setAlbum(page.getHtml().xpath("//p[@class='des s-fc4']/a/text()").toString());
 			music.setURL(url);
-			//page.putField("music", music);
-			mMusicService.addMusic(music);
+			page.putField("music", music);
+			//mMusicService.addMusic(music);
 		}
 	}
 
@@ -112,9 +110,10 @@ public class MusicPageProcessor implements PageProcessor {
 					comment.setNickName(nicknames.get(i));
 					comment.setTime(MusicUtils.stampToDate(times.get(i)));
 					comments.add(comment);
-					mMusicService.addComment(comment);
-				}
 
+//					mMusicService.addComment(comment);
+				}
+                page.putField("comment", comments);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -143,7 +142,7 @@ public class MusicPageProcessor implements PageProcessor {
 				.addUrl(START_URL)
 				.setDownloader(httpClientDownloader)
 				.thread(5)
-//				.addPipeline(netEaseMusicPipeline)
+				.addPipeline(new MusicPipeline())
 				.run();
 		long end = System.currentTimeMillis();
 		System.out.println("爬虫结束,耗时--->" + MusicUtils.parseMillisecone(end - start));

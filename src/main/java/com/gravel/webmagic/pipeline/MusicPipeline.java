@@ -4,12 +4,11 @@ import com.gravel.Mapper.CommentMapper;
 import com.gravel.Mapper.MusicMapper;
 import com.gravel.entity.Comment;
 import com.gravel.entity.Music;
-import com.gravel.repository.CommentRepository;
-import com.gravel.repository.MusicRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 import us.codecraft.webmagic.ResultItems;
@@ -17,16 +16,16 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 /**
- * Created by Ezio on 2017/6/28.
+ * Created by gravel on 2017/6/28.
  */
 @Component
 public class MusicPipeline implements Pipeline {
 
 	@Autowired
-	CommentMapper CommentMapper;
+	CommentMapper commentMapper;
 
 	@Autowired
-	MusicMapper MusicMapper;
+	MusicMapper musicMapper;
 
 	@Override
 	public void process(ResultItems resultItems, Task task) {
@@ -34,15 +33,17 @@ public class MusicPipeline implements Pipeline {
 		for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
 			if (entry.getKey().equals("music")) {
 				Music music = (Music) entry.getValue();
-				System.out.println("mMusicDao--->null" + MusicMapper == null);
+				System.out.println("mMusicDao--->null" + musicMapper == null);
 //				if (MusicMapper.countBySongId(music.getSongId()) == 0) {
-					MusicMapper.insert(music);
+                musicMapper.insert(music);
 //				}
 			} else {
-				Comment comment = (Comment) entry.getValue();
-				System.out.println("mCommentDao--->null" + CommentMapper == null);
+				List<Comment> commentList = (List<Comment> ) entry.getValue();
+				System.out.println("mCommentDao--->null" + commentMapper == null);
 //				if (mCommentDao.countByCommentId(comment.getCommentId()) == 0) {
-				CommentMapper.insert(comment);
+				for(Comment comment : commentList){
+                    commentMapper.insert(comment);
+				}
 //				}
 			}
 
