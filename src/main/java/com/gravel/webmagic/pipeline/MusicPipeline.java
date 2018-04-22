@@ -34,17 +34,18 @@ public class MusicPipeline implements Pipeline {
 			if (entry.getKey().equals("music")) {
 				Music music = (Music) entry.getValue();
 //				System.out.println("mMusicDao--->null" + musicMapper == null);
-//				if (MusicMapper.countBySongId(music.getSongId()) == 0) {
+				if (musicMapper.checkSongIsExit(music.getSongId()) == 0) {
                 musicMapper.insert(music);
-//				}
+				}
 			} else {
 				List<Comment> commentList = (List<Comment> ) entry.getValue();
 //				System.out.println("mCommentDao--->null" + commentMapper == null);
-//				if (mCommentDao.countByCommentId(comment.getCommentId()) == 0) {
+
 				for(Comment comment : commentList){
+					if (commentMapper.checkCommentIsExit(comment.getCommentId()) == 0) {
                     commentMapper.insert(comment);
 				}
-//				}
+				}
 			}
 
 		}

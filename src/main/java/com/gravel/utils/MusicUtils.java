@@ -3,6 +3,7 @@ package com.gravel.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.Proxy;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import org.jsoup.Jsoup;
  * Created by gravel on 2018/4/20.
  */
 public class MusicUtils {
+
 	/**
 	 * 使用非加密API获取网易云的评论
 	 * @param songId
@@ -20,13 +22,14 @@ public class MusicUtils {
 	 */
 	public static String crawlNormalAjaxUrl(String songId,String authHeader, int offset) {
 		String jsonComment = "";
+        final String ip = "forward.xdaili.cn";//这里以正式服务器ip地址为准
+        final int port = 80;//这里以正式服务器端口地址为准
 		try {
 		 jsonComment = Jsoup.
 				 connect("http://music.163.com/api/v1/resource/comments/R_SO_4_" + songId + "/?limit=100&offset="+offset)
-//				.header("Referer", "http://music.163.com/")
-//				.header("Host", "music.163.com")
-                 .header("Proxy-Authorization", authHeader)
                  .userAgent(UserAgentUtil.getRandomUserAgent())
+                 .proxy(ip,port)
+                 .header("Proxy-Authorization", authHeader)
 				.ignoreContentType(true)
 				.get().select("body").text().toString();
 		} catch (Exception e) {
